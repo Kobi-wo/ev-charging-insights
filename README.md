@@ -51,16 +51,23 @@ Sessions of 3 hours or more are 16% of visits but 46% of the energy.
 **5. Each site has its own customer.**
 Bond Park is a weekend site: 7.6 sessions per day on weekends vs 5.8 on weekdays. The downtown deck is steady all week (8.1 per day). On its busiest days (late August 2022) the deck reached 26–27 sessions per day.
 
-**6. Floor level drives demand in the parking deck.**
-Chargers on the lower floors are much busier. In 2022, when all floors were open, each charger on floors 2–3 had about 1.7–1.9 sessions per day. Floors 5–6 had less than 0.2 — about 10 times less. Customers on high floors stay longer and take more energy (16–24 kWh vs about 9 kWh), which suggests long-stay parkers, not quick visitors.
+**6. Floor level drives demand in the parking deck — and outages make it look bigger.**
+In 2022, each charger on floors 2–3 had about 1.7–1.9 sessions per day, and floors 5–6 had less than 0.2. But the upper-floor chargers were also silent for long periods (see finding 7). Counting only the days a charger was likely working, floors 2–3 still get about **6 times** more use than floors 5–6 (about 1.8 vs 0.3 sessions per day). Customers on high floors also stay longer and take more energy (16–24 kWh vs about 9 kWh), which suggests long-stay parkers.
 
-| Deck floor | Chargers | Sessions per charger per day | Avg kWh | Avg minutes |
-|---|---:|---:|---:|---:|
-| 2 | 2 | 1.93 | 9.8 | 116 |
-| 3 | 2 | 1.66 | 8.7 | 102 |
-| 4 | 1 | 0.44 | 11.1 | 128 |
-| 5 | 1 | 0.16 | 15.8 | 165 |
-| 6 | 1 | 0.18 | 23.7 | 238 |
+| Deck floor | Sessions per day (all days) | Sessions per day (likely working days) |
+|---|---:|---:|
+| 2 | 0.59–2.37 | 0.77–2.63 |
+| 3 | 0.73–1.71 | 1.10–1.88 |
+| 4 | 0.35 | 0.46 |
+| 5 | 0.10 | 0.26 |
+| 6 | 0.09 | 0.37 |
+
+**7. Some chargers were likely out of service for months.**
+The data has no status records, so outages cannot be confirmed. But a busy charger that goes silent for months is most likely down. I flagged a gap as a *likely outage* when it was 30+ days **and** at least 10 times the charger's normal gap between uses.
+
+- **Deck P5 and P6** were silent 62–77% of their time in service. When they did work, customers used them every 2–4 days.
+- **Deck P3 East** was silent for 388 days (May 2021 – June 2022), and **Deck P2-1** for 244 days.
+- **Ops Center** was a steady weekday charger (about 200 sessions a year, 2012–2018). From mid-2019 it had five gaps of 68–133 days, and it stopped in December 2021. Its decline came mostly from downtime, not from a lack of drivers. (Some 2020 gaps also match the COVID lockdown.)
 
 ## Recommendations
 
@@ -70,6 +77,7 @@ These follow from the findings. They are proposals to test, not proven results.
 2. **Expand downtown first — on the lower floors.** The deck carries half the network's demand and has the highest daily peaks. New chargers on floors 2–3 should get far more use than chargers on floors 5–6. Better signs to the upper-floor chargers are a low-cost test.
 3. **Manage long sessions.** A time limit or an idle fee after charging ends can free ports for more customers. (This data records charging time only, not total plug-in time — a next step is to get plug-in data to measure idle time directly.)
 4. **Plan Bond Park around weekends.** Schedule maintenance on weekdays.
+5. **Track charger uptime.** Measure the % of days each charger works, and alert when a normally busy charger has no sessions for 2+ weeks. Long outages lose customers, and the upper-floor chargers lose the most.
 
 ## Data cleaning
 

@@ -121,3 +121,83 @@ FROM deck
 WHERE YEAR(start_local) = 2022
 GROUP BY floor_level
 ORDER BY floor_level;
+
+-- Q8b. Floor check with outages removed: sessions per LIKELY WORKING day.
+-- Uses the same outage rule as Q9 (gap of 30+ days AND 10x the charger's median gap).
+-- Result: the floor effect is still real, but smaller (about 6x, not 10x).
+WITH days_used AS (
+    SELECT charger_name, CAST(start_local AS date) AS d, COUNT(*) AS n
+    FROM dbo.v_sessions_enriched
+    WHERE site_name = 'Downtown Parking Deck'
+    GROUP BY charger_name, CAST(start_local AS date)
+),
+g AS (
+    SELECT charger_name, d, n,
+           DATEDIFF(day, LAG(d) OVER (PARTITION BY charger_name ORDER BY d), d) AS gap
+    FROM days_used
+),
+m AS (
+    SELECT DISTINCT charger_name,
+           PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap) OVER (PARTITION BY charger_name) AS median_gap
+    FROM g WHERE gap IS NOT NULL
+),
+c AS (
+    SELECT g.charger_name, SUM(n) AS sessions,
+           DATEDIFF(day, MIN(d), MAX(d)) AS window_days,
+           ISNULL(SUM(CASE WHEN gap >= 30 AND gap >= 10 * median_gap THEN gap END), 0) AS outage_days
+    FROM g JOIN m ON m.charger_name = g.charger_name
+    GROUP BY g.charger_name
+)
+SELECT CAST(SUBSTRING(charger_name, 7, 1) AS int) AS floor_level, charger_name, sessions,
+       window_days, outage_days,
+       CAST(100.0 * outage_days / window_days AS decimal(4,1))               AS pct_likely_down,
+       CAST(1.0 * sessions / window_days AS decimal(4,2))                    AS per_day_all,
+       CAST(1.0 * sessions / NULLIF(window_days - outage_days, 0) AS decimal(4,2)) AS per_working_day
+FROM c
+ORDER BY floor_level, charger_name;
+
+-- Q9. Likely outages: unusually long gaps with no sessions, for every charger.
+-- ASSUMPTION: the data has no status records, so it cannot confirm an outage.
+-- A gap counts as a "likely outage" only if BOTH are true:
+--   1. it lasts 30+ days, and
+--   2. it is at least 10x the charger's normal gap between days of use.
+-- Why rule 2: a busy charger is used almost every day, so 30 days of silence is unusual.
+-- A rarely used charger (Deck P5/P6, ~1 use every 10 days) can go 30 days with no
+-- customers just from low demand. Both thresholds are judgment calls, not standards.
+-- Note: gaps in March-May 2020 also match the COVID lockdown, not only outages.
+WITH days_used AS (
+    SELECT charger_name, CAST(start_local AS date) AS day_used
+    FROM dbo.v_sessions_enriched
+    GROUP BY charger_name, CAST(start_local AS date)
+),
+gaps AS (
+    SELECT charger_name,
+           LAG(day_used) OVER (PARTITION BY charger_name ORDER BY day_used) AS last_use_before_gap,
+           day_used AS first_use_after_gap,
+           DATEDIFF(day, LAG(day_used) OVER (PARTITION BY charger_name ORDER BY day_used), day_used) AS gap_days
+    FROM days_used
+),
+normal AS (   -- median gap = the charger's typical wait between days of use
+    SELECT DISTINCT charger_name,
+           PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_days) OVER (PARTITION BY charger_name) AS median_gap
+    FROM gaps
+    WHERE gap_days IS NOT NULL
+)
+SELECT g.charger_name, g.last_use_before_gap, g.first_use_after_gap, g.gap_days,
+       n.median_gap AS normal_gap_days
+FROM gaps g
+JOIN normal n ON n.charger_name = g.charger_name
+WHERE g.gap_days >= 30
+  AND g.gap_days >= 10 * n.median_gap
+ORDER BY g.charger_name, g.last_use_before_gap;
+
+-- Q10. Ops Center decline: who used it, and how did that change?
+SELECT YEAR(start_local) AS yr, charger_name,
+       COUNT(*)                                                     AS sessions,
+       CAST(AVG(energy_kwh) AS decimal(4,1))                        AS avg_kwh,
+       CAST(100.0 * SUM(CASE WHEN DATENAME(weekday, start_local) IN ('Saturday','Sunday') THEN 1 ELSE 0 END)
+            / COUNT(*) AS int)                                      AS pct_weekend
+FROM dbo.v_sessions_enriched
+WHERE site_name = 'Operations Center'
+GROUP BY YEAR(start_local), charger_name
+ORDER BY yr, charger_name;
