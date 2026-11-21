@@ -5,23 +5,27 @@
 USE EV_Project;
 GO
 
--- Q0. Data check: which station names share an address, and when was each used?
-SELECT r.address_1, r.station_name,
+-- Q0. Data check: each raw station name, the clean charger it maps to, and when it was used.
+-- Read it per charger: the old name's last_use should be just before the new name's first_use.
+SELECT d.site_name, c.charger_name, r.station_name,
        MIN(CONVERT(date, LEFT(r.start_date, 10))) AS first_use,
        MAX(CONVERT(date, LEFT(r.start_date, 10))) AS last_use,
        COUNT(*) AS sessions
 FROM dbo.ev_sessions r
-GROUP BY r.address_1, r.station_name
-ORDER BY r.address_1, first_use;
+JOIN dbo.dim_site d    ON d.address_1    = r.address_1
+JOIN dbo.dim_charger c ON c.station_name = r.station_name
+GROUP BY d.site_name, c.charger_name, r.station_name
+ORDER BY d.site_name, c.charger_name, first_use;
 
 -- Q1. How has demand grown? (2023 has only 3 days of data - exclude it from trends.)
 SELECT YEAR(start_local)                  AS yr,
        COUNT(*)                           AS sessions,
        CAST(SUM(energy_kwh) AS int)       AS total_kwh,
        CAST(AVG(charge_minutes) AS int)   AS avg_minutes,
-       COUNT(DISTINCT site_name)          AS active_sites
+       COUNT(DISTINCT site_name)          AS active_sites,
+       COUNT(DISTINCT charger_name)       AS active_chargers
        -- Not COUNT(DISTINCT station_name): stations were renamed in Aug 2021,
-       -- so 2021 counts each charger twice (old name + new name) and shows 19 "stations".
+       -- so 2021 would count each charger twice (old name + new name).
 FROM dbo.v_sessions_enriched
 WHERE YEAR(start_local) < 2023
 GROUP BY YEAR(start_local)
