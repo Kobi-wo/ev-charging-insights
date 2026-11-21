@@ -100,3 +100,24 @@ WITH d AS (
     GROUP BY site_name, CAST(start_local AS date)
 )
 SELECT site_name, day_, sessions FROM d WHERE rn <= 3 ORDER BY site_name, sessions DESC;
+
+-- Q8. What makes a charger popular? Floor level in the downtown deck (2022 = all floors open).
+-- Charger names look like 'Deck P3 West', so character 7 is the floor number.
+-- Note: P3 East opened mid-2022 and P2-1 stopped in Aug 2022, so dividing by 365
+-- makes floors 2-3 look slightly LESS busy than they were. The real gap is even bigger.
+WITH deck AS (
+    SELECT CAST(SUBSTRING(charger_name, 7, 1) AS int) AS floor_level,
+           charger_name, start_local, energy_kwh, charge_minutes
+    FROM dbo.v_sessions_enriched
+    WHERE site_name = 'Downtown Parking Deck'
+)
+SELECT floor_level,
+       COUNT(DISTINCT charger_name)                                        AS chargers,
+       COUNT(*)                                                            AS sessions,
+       CAST(1.0 * COUNT(*) / COUNT(DISTINCT charger_name) / 365 AS decimal(4,2)) AS sessions_per_charger_day,
+       CAST(AVG(energy_kwh) AS decimal(4,1))                               AS avg_kwh,
+       CAST(AVG(charge_minutes) AS int)                                    AS avg_minutes
+FROM deck
+WHERE YEAR(start_local) = 2022
+GROUP BY floor_level
+ORDER BY floor_level;

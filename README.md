@@ -48,12 +48,23 @@ Sessions of 3 hours or more are 16% of visits but 46% of the energy.
 **5. Each site has its own customer.**
 Bond Park is a weekend site: 7.6 sessions per day on weekends vs 5.8 on weekdays. The downtown deck is steady all week (8.1 per day). On its busiest days (late August 2022) the deck reached 26–27 sessions per day.
 
+**6. Floor level drives demand in the parking deck.**
+Chargers on the lower floors are much busier. In 2022, when all floors were open, each charger on floors 2–3 had about 1.7–1.9 sessions per day. Floors 5–6 had less than 0.2 — about 10 times less. Customers on high floors stay longer and take more energy (16–24 kWh vs about 9 kWh), which suggests long-stay parkers, not quick visitors.
+
+| Deck floor | Chargers | Sessions per charger per day | Avg kWh | Avg minutes |
+|---|---:|---:|---:|---:|
+| 2 | 2 | 1.93 | 9.8 | 116 |
+| 3 | 2 | 1.66 | 8.7 | 102 |
+| 4 | 1 | 0.44 | 11.1 | 128 |
+| 5 | 1 | 0.16 | 15.8 | 165 |
+| 6 | 1 | 0.18 | 23.7 | 238 |
+
 ## Recommendations
 
 These follow from the findings. They are proposals to test, not proven results.
 
 1. **Shift the 4–6 PM peak.** Test off-peak pricing or a managed-charging program to move flexible sessions to the evening or night.
-2. **Expand downtown first.** The deck carries half the network's demand and has the highest daily peaks.
+2. **Expand downtown first — on the lower floors.** The deck carries half the network's demand and has the highest daily peaks. New chargers on floors 2–3 should get far more use than chargers on floors 5–6. Better signs to the upper-floor chargers are a low-cost test.
 3. **Manage long sessions.** A time limit or an idle fee after charging ends can free ports for more customers. (This data records charging time only, not total plug-in time — a next step is to get plug-in data to measure idle time directly.)
 4. **Plan Bond Park around weekends.** Schedule maintenance on weekdays.
 
