@@ -19,7 +19,9 @@ SELECT YEAR(start_local)                  AS yr,
        COUNT(*)                           AS sessions,
        CAST(SUM(energy_kwh) AS int)       AS total_kwh,
        CAST(AVG(charge_minutes) AS int)   AS avg_minutes,
-       COUNT(DISTINCT station_name)       AS active_station_names
+       COUNT(DISTINCT site_name)          AS active_sites
+       -- Not COUNT(DISTINCT station_name): stations were renamed in Aug 2021,
+       -- so 2021 counts each charger twice (old name + new name) and shows 19 "stations".
 FROM dbo.v_sessions_enriched
 WHERE YEAR(start_local) < 2023
 GROUP BY YEAR(start_local)
