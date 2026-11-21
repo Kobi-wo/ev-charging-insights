@@ -97,6 +97,20 @@ GROUP BY site_name,
          CASE WHEN DATENAME(weekday, start_local) IN ('Saturday','Sunday') THEN 'Weekend' ELSE 'Weekday' END
 ORDER BY site_name, day_type;
 
+-- Q5b. Is the weekday/weekend pattern stable? Same idea as Q5, across 2019-2022.
+-- Note: "per active day" counts only days with 1+ session, which flatters low-use sites.
+SELECT site_name, YEAR(start_local) AS yr,
+       CAST(1.0 * SUM(CASE WHEN DATENAME(weekday, start_local) IN ('Saturday','Sunday') THEN 1 ELSE 0 END)
+            / NULLIF(COUNT(DISTINCT CASE WHEN DATENAME(weekday, start_local) IN ('Saturday','Sunday')
+                                         THEN CAST(start_local AS date) END), 0) AS decimal(4,1)) AS weekend_per_day,
+       CAST(1.0 * SUM(CASE WHEN DATENAME(weekday, start_local) NOT IN ('Saturday','Sunday') THEN 1 ELSE 0 END)
+            / NULLIF(COUNT(DISTINCT CASE WHEN DATENAME(weekday, start_local) NOT IN ('Saturday','Sunday')
+                                         THEN CAST(start_local AS date) END), 0) AS decimal(4,1)) AS weekday_per_day
+FROM dbo.v_sessions_enriched
+WHERE YEAR(start_local) BETWEEN 2019 AND 2022
+GROUP BY site_name, YEAR(start_local)
+ORDER BY site_name, yr;
+
 -- Q6. Session length segments: how long do customers charge, and how much energy do they take?
 SELECT CASE WHEN charge_minutes < 60  THEN '1. Under 1 hour'
             WHEN charge_minutes < 180 THEN '2. 1-3 hours'

@@ -58,8 +58,17 @@ Evening charging (6–10 PM) doubled from about 10% to about 20% starting in 202
 
 Sessions of 3 hours or more are 16% of visits but 46% of the energy.
 
-**5. Each site has its own customer.**
-Bond Park is a weekend site: 7.6 sessions per day on weekends vs 5.8 on weekdays. The downtown deck is steady all week (8.1 per day). On its busiest days (late August 2022) the deck reached 26–27 sessions per day.
+**5. Each site serves a different kind of customer (likely segments).**
+The day-of-week pattern at each site is stable across 2019–2022:
+
+| Site | Pattern (sessions per active day) | Likely segment |
+|---|---|---|
+| Bond Park Boathouse | Weekend-heavy: 1.2–1.8× weekdays every year (7.6 vs 5.8 in 2022) | Leisure visitors |
+| Downtown Parking Deck | Even all week in 2022 (8.1 vs 8.1); weekend-heavy in 2019 and 2021 | Mixed: work days + dining and events |
+| Town Hall | Even all week (about 2–3 per day) | Visitors and staff |
+| Operations Center | Weekday-heavy: only 5–12% of sessions on weekends | Workplace |
+
+> **Assumption:** The data has no information about who the customers are. These segments are a general assumption made from *when* people charge and *where* each site is (for example, Bond Park is a town park with a lake and boat rentals). They are a starting point to test with customer data or surveys, not a proven result.
 
 **6. Floor level drives demand in the parking deck — and outages make it look bigger.**
 In 2022, each charger on floors 2–3 had about 1.7–1.9 sessions per day, and floors 5–6 had less than 0.2. But the upper-floor chargers were also silent for long periods (see finding 7). Counting only the days a charger was likely working, floors 2–3 still get about **6 times** more use than floors 5–6 (about 1.8 vs 0.3 sessions per day). Customers on high floors also stay longer and take more energy (16–24 kWh vs about 9 kWh), which suggests long-stay parkers.
@@ -86,7 +95,7 @@ These follow from the findings. They are proposals to test, not proven results.
 1. **Watch the evening shift.** Evening charging doubled after 2020. Measure how much charging is *in progress* during the 4–6 PM grid peak before designing off-peak pricing or managed charging.
 2. **Expand downtown first — on the lower floors.** The deck carries half the network's demand and has the highest daily peaks. New chargers on floors 2–3 should get far more use than chargers on floors 5–6. Better signs to the upper-floor chargers are a low-cost test.
 3. **Manage long sessions.** A time limit or an idle fee after charging ends can free ports for more customers. (This data records charging time only, not total plug-in time — a next step is to get plug-in data to measure idle time directly.)
-4. **Plan Bond Park around weekends.** Schedule maintenance on weekdays.
+4. **Plan each site around its likely segment.** Schedule Bond Park maintenance on weekdays, keep the Ops Center reliable on work days, and give the all-week downtown deck the most capacity.
 5. **Track charger uptime.** Measure the % of days each charger works, and alert when a normally busy charger has no sessions for 2+ weeks. Long outages lose customers, and the upper-floor chargers lose the most.
 
 ## Data cleaning
