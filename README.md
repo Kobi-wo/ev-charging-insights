@@ -11,7 +11,7 @@ An analysis of 10 years of public EV charging sessions. The goal: understand how
 
 1. How fast is EV charging demand growing?
 2. Which sites carry the load?
-3. When do customers charge, and does that line up with peak grid demand?
+3. When do customers charge, and did that change as demand grew?
 4. How long do customers stay, and how much energy do they take?
 5. What should the operator do next?
 
@@ -34,8 +34,16 @@ Sessions rose from 297 in 2017 to 5,907 in 2022. The growth came in two stages:
 **2. Two sites carry 84% of sessions.**
 In 2022, the Downtown Parking Deck had 49% of sessions and Bond Park Boathouse had 35%. Town Hall customers stay longer (153 min on average) and take more energy per visit (13 kWh).
 
-**3. Demand peaks from 4 to 6 PM.**
-20% of all sessions start in the 4–6 PM window (local time). This is also when utility demand is highest on a typical day.
+**3. The 4–6 PM peak faded as demand grew.**
+Across all years, 20% of sessions start between 4 and 6 PM (local time). But that number comes mostly from the early years: in 2017, 48% of sessions started then. From 2019 on, only about 16% do, and demand spreads across the day.
+
+| Year | 6–10 AM | 10 AM–4 PM | 4–6 PM | 6–10 PM |
+|---|---:|---:|---:|---:|
+| 2017 | 17% | 28% | 48% | 6% |
+| 2019 | 24% | 49% | 16% | 10% |
+| 2022 | 21% | 43% | 16% | 17% |
+
+Evening charging (6–10 PM) doubled from about 10% to about 20% starting in 2020. Note: these numbers count session *starts*. A session that starts at 3 PM still draws power during the 4–6 PM grid peak.
 
 **4. Short visits are frequent, long visits use the energy.**
 
@@ -73,7 +81,7 @@ The data has no status records, so outages cannot be confirmed. But a busy charg
 
 These follow from the findings. They are proposals to test, not proven results.
 
-1. **Shift the 4–6 PM peak.** Test off-peak pricing or a managed-charging program to move flexible sessions to the evening or night.
+1. **Watch the evening shift.** Evening charging doubled after 2020. Measure how much charging is *in progress* during the 4–6 PM grid peak before designing off-peak pricing or managed charging.
 2. **Expand downtown first — on the lower floors.** The deck carries half the network's demand and has the highest daily peaks. New chargers on floors 2–3 should get far more use than chargers on floors 5–6. Better signs to the upper-floor chargers are a low-cost test.
 3. **Manage long sessions.** A time limit or an idle fee after charging ends can free ports for more customers. (This data records charging time only, not total plug-in time — a next step is to get plug-in data to measure idle time directly.)
 4. **Plan Bond Park around weekends.** Schedule maintenance on weekdays.

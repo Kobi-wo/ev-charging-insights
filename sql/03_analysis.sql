@@ -65,6 +65,21 @@ FROM dbo.v_sessions_enriched
 GROUP BY DATEPART(hour, start_local)
 ORDER BY hour_local;
 
+-- Q4b. Did the time-of-day pattern hold as demand grew? Share of session starts by time band, per year.
+-- Finding: the strong 4-6 PM peak was an early-years pattern (48% in 2017). From 2019 on it is
+-- only ~16%, demand spreads across the day, and evening (6-10 PM) share doubles from 2020.
+SELECT YEAR(start_local) AS yr,
+       COUNT(*)          AS sessions,
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 6  AND 9  THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_6_10am],
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 10 AND 15 THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_10am_4pm],
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 16 AND 17 THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_4_6pm],
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 18 AND 21 THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_6_10pm],
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) IN (22,23,0,1,2,3,4,5) THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_night]
+FROM dbo.v_sessions_enriched
+WHERE YEAR(start_local) BETWEEN 2017 AND 2022
+GROUP BY YEAR(start_local)
+ORDER BY yr;
+
 -- Q5. Weekday vs weekend, by site.
 SELECT site_name,
        CASE WHEN DATENAME(weekday, start_local) IN ('Saturday','Sunday') THEN 'Weekend' ELSE 'Weekday' END AS day_type,
