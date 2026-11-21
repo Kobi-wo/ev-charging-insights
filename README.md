@@ -37,11 +37,13 @@ In 2022, the Downtown Parking Deck had 49% of sessions and Bond Park Boathouse h
 **3. The 4–6 PM peak faded as demand grew.**
 Across all years, 20% of sessions start between 4 and 6 PM (local time). But that number comes mostly from the early years: in 2017, 48% of sessions started then. From 2019 on, only about 16% do, and demand spreads across the day.
 
-| Year | 6–10 AM | 10 AM–4 PM | 4–6 PM | 6–10 PM |
-|---|---:|---:|---:|---:|
-| 2017 | 17% | 28% | 48% | 6% |
-| 2019 | 24% | 49% | 16% | 10% |
-| 2022 | 21% | 43% | 16% | 17% |
+| Year | 10 AM–4 PM (6 h) | 4–6 PM (2 h) | 6–10 PM (4 h) |
+|---|---:|---:|---:|
+| 2017 | 28% · 4.7%/h | 48% · 24.1%/h | 6% · 1.5%/h |
+| 2019 | 49% · 8.2%/h | 16% · 8.1%/h | 10% · 2.5%/h |
+| 2022 | 43% · 7.1%/h | 16% · 8.2%/h | 17% · 4.3%/h |
+
+The bands follow parts of the day, so they have different lengths. Each cell shows the band's share of sessions and its share **per hour**. By total, 10 AM–4 PM is the main charging window. Hour for hour, 4–6 PM is still slightly busier, but the gap is small since 2019. The hourly chart in the dashboard shows all 24 hours with no grouping.
 
 Evening charging (6–10 PM) doubled from about 10% to about 20% starting in 2020. Note: these numbers count session *starts*. A session that starts at 3 PM still draws power during the 4–6 PM grid peak.
 

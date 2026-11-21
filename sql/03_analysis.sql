@@ -74,7 +74,13 @@ SELECT YEAR(start_local) AS yr,
        CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 10 AND 15 THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_10am_4pm],
        CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 16 AND 17 THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_4_6pm],
        CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 18 AND 21 THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_6_10pm],
-       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) IN (22,23,0,1,2,3,4,5) THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_night]
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) IN (22,23,0,1,2,3,4,5) THEN 1 ELSE 0 END) / COUNT(*) AS decimal(4,1)) AS [pct_night],
+       -- Share PER HOUR: the bands have different lengths (4, 6, 2, 4 hours), so raw shares
+       -- favor long bands. Dividing by the band length makes them fair to compare.
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 6  AND 9  THEN 1 ELSE 0 END) / COUNT(*) / 4 AS decimal(4,1)) AS [per_hr_6_10am],
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 10 AND 15 THEN 1 ELSE 0 END) / COUNT(*) / 6 AS decimal(4,1)) AS [per_hr_10am_4pm],
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 16 AND 17 THEN 1 ELSE 0 END) / COUNT(*) / 2 AS decimal(4,1)) AS [per_hr_4_6pm],
+       CAST(100.0 * SUM(CASE WHEN DATEPART(hour, start_local) BETWEEN 18 AND 21 THEN 1 ELSE 0 END) / COUNT(*) / 4 AS decimal(4,1)) AS [per_hr_6_10pm]
 FROM dbo.v_sessions_enriched
 WHERE YEAR(start_local) BETWEEN 2017 AND 2022
 GROUP BY YEAR(start_local)
