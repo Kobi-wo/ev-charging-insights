@@ -18,7 +18,10 @@ An analysis of 10 years of public EV charging sessions. The goal: understand how
 ## Key findings
 
 **1. Demand grew 20× in five years.**
-Sessions rose from 297 in 2017 to 5,907 in 2022. Growth continued through 2020 (+86%), when many other public services dropped. A large part of the jump in 2019 matches the opening of the downtown parking deck chargers.
+Sessions rose from 297 in 2017 to 5,907 in 2022. The growth came in two stages:
+
+- **2018–2020: new sites.** 2018 was Bond Park's first full year (opened September 2017), and 2020 was the downtown deck's first full year (opened late 2019). Most early growth came from more places to charge.
+- **2021–2022: more demand at the same sites.** No new sites opened, but use kept growing — the deck rose 62% and Town Hall 65% in 2022. This is true demand growth on about 10 chargers.
 
 | Year | Sessions | Energy (kWh) | Growth |
 |------|---------:|-------------:|-------:|
