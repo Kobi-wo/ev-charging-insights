@@ -1,0 +1,96 @@
+/* =====================================================================
+   03 - Analysis queries
+   Each query answers one business question. Results feed the README findings.
+   ===================================================================== */
+USE EV_Project;
+GO
+
+-- Q0. Data check: which station names share an address, and when was each used?
+SELECT r.address_1, r.station_name,
+       MIN(CONVERT(date, LEFT(r.start_date, 10))) AS first_use,
+       MAX(CONVERT(date, LEFT(r.start_date, 10))) AS last_use,
+       COUNT(*) AS sessions
+FROM dbo.ev_sessions r
+GROUP BY r.address_1, r.station_name
+ORDER BY r.address_1, first_use;
+
+-- Q1. How has demand grown? (2023 has only 3 days of data - exclude it from trends.)
+SELECT YEAR(start_local)                  AS yr,
+       COUNT(*)                           AS sessions,
+       CAST(SUM(energy_kwh) AS int)       AS total_kwh,
+       CAST(AVG(charge_minutes) AS int)   AS avg_minutes,
+       COUNT(DISTINCT station_name)       AS active_station_names
+FROM dbo.v_sessions_enriched
+WHERE YEAR(start_local) < 2023
+GROUP BY YEAR(start_local)
+ORDER BY yr;
+
+-- Q2. Year-over-year growth in sessions.
+WITH y AS (
+    SELECT YEAR(start_local) AS yr, COUNT(*) AS sessions
+    FROM dbo.v_sessions_enriched
+    WHERE YEAR(start_local) < 2023
+    GROUP BY YEAR(start_local)
+)
+SELECT yr, sessions,
+       LAG(sessions) OVER (ORDER BY yr) AS prior_year,
+       CAST(100.0 * (sessions - LAG(sessions) OVER (ORDER BY yr))
+            / NULLIF(LAG(sessions) OVER (ORDER BY yr), 0) AS decimal(6,1)) AS pct_growth
+FROM y
+ORDER BY yr;
+
+-- Q3. Which sites carry the load? (2022 = last full year)
+SELECT site_name,
+       COUNT(*)                                              AS sessions,
+       CAST(SUM(energy_kwh) AS int)                          AS total_kwh,
+       CAST(100.0 * COUNT(*) / SUM(COUNT(*)) OVER () AS decimal(5,1)) AS pct_of_sessions,
+       CAST(AVG(energy_kwh) AS decimal(5,1))                 AS avg_kwh,
+       CAST(AVG(charge_minutes) AS int)                      AS avg_minutes
+FROM dbo.v_sessions_enriched
+WHERE YEAR(start_local) = 2022
+GROUP BY site_name
+ORDER BY sessions DESC;
+
+-- Q4. When do customers charge? Sessions by local hour of day.
+SELECT DATEPART(hour, start_local) AS hour_local,
+       COUNT(*)                    AS sessions,
+       CAST(100.0 * COUNT(*) / SUM(COUNT(*)) OVER () AS decimal(4,1)) AS pct
+FROM dbo.v_sessions_enriched
+GROUP BY DATEPART(hour, start_local)
+ORDER BY hour_local;
+
+-- Q5. Weekday vs weekend, by site.
+SELECT site_name,
+       CASE WHEN DATENAME(weekday, start_local) IN ('Saturday','Sunday') THEN 'Weekend' ELSE 'Weekday' END AS day_type,
+       COUNT(*) AS sessions,
+       CAST(1.0 * COUNT(*) / COUNT(DISTINCT CAST(start_local AS date)) AS decimal(4,1)) AS sessions_per_active_day
+FROM dbo.v_sessions_enriched
+WHERE YEAR(start_local) = 2022
+GROUP BY site_name,
+         CASE WHEN DATENAME(weekday, start_local) IN ('Saturday','Sunday') THEN 'Weekend' ELSE 'Weekday' END
+ORDER BY site_name, day_type;
+
+-- Q6. Session length segments: how long do customers charge, and how much energy do they take?
+SELECT CASE WHEN charge_minutes < 60  THEN '1. Under 1 hour'
+            WHEN charge_minutes < 180 THEN '2. 1-3 hours'
+            WHEN charge_minutes < 480 THEN '3. 3-8 hours'
+            ELSE                           '4. 8+ hours' END       AS segment,
+       COUNT(*)                                                     AS sessions,
+       CAST(100.0 * COUNT(*) / SUM(COUNT(*)) OVER () AS decimal(4,1)) AS pct_sessions,
+       CAST(SUM(energy_kwh) AS int)                                 AS total_kwh,
+       CAST(100.0 * SUM(energy_kwh) / SUM(SUM(energy_kwh)) OVER () AS decimal(4,1)) AS pct_kwh
+FROM dbo.v_sessions_enriched
+GROUP BY CASE WHEN charge_minutes < 60  THEN '1. Under 1 hour'
+              WHEN charge_minutes < 180 THEN '2. 1-3 hours'
+              WHEN charge_minutes < 480 THEN '3. 3-8 hours'
+              ELSE                           '4. 8+ hours' END
+ORDER BY segment;
+
+-- Q7. Busiest days: how close do sites get to capacity? Top 10 days by sessions, per site.
+WITH d AS (
+    SELECT site_name, CAST(start_local AS date) AS day_, COUNT(*) AS sessions,
+           ROW_NUMBER() OVER (PARTITION BY site_name ORDER BY COUNT(*) DESC) AS rn
+    FROM dbo.v_sessions_enriched
+    GROUP BY site_name, CAST(start_local AS date)
+)
+SELECT site_name, day_, sessions FROM d WHERE rn <= 3 ORDER BY site_name, sessions DESC;
