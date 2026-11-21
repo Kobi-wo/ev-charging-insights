@@ -68,7 +68,7 @@ The day-of-week pattern at each site is stable across 2019–2022:
 | Town Hall | Even all week (about 2–3 per day) | Visitors and staff |
 | Operations Center | Weekday-heavy: only 5–12% of sessions on weekends | Workplace |
 
-Use per day grew at every site from 2019 to 2022, on weekends and on weekdays. The few dips have likely causes: 2020 dips match the COVID lockdown, and the deck's weekday dip in 2021 matches months-long outages on three of its busiest chargers (see finding 7).
+Use per day grew at every site from 2019 to 2022, on weekends and on weekdays. The 2020 dips are small (5–14%) and may be normal variation; COVID shows more clearly as stalled growth — Bond Park grew 73% in 2019 but only 4% in 2020. The deck's weekday dip in 2021 matches months-long outages on three of its busiest chargers (see finding 7).
 
 **The downtown deck jumped in 2022:** weekend use rose 45% (5.6 → 8.1 per day) and weekday use rose 69% (4.8 → 8.1). Two causes likely worked together: chargers that were down in 2021 came back (P2-1 and P2-2 in January 2022, P3 East in June 2022), and demand kept growing. The data cannot separate the two exactly.
 
