@@ -239,34 +239,43 @@ ORDER BY yr, charger_name;
 
 -- Q11. COVID 2020: what changed - sessions, days with zero use, and customer value?
 -- Customer value = energy (kWh) and time per session, not only the count of sessions.
--- Change @site to compare sites. Bond Park had no long outages (Q9), so its zero-use days
--- are not outages. The deck had outages in 2021, so treat its 2021 zero-use days with care.
--- Performance: the view recalculates its columns on every read, so we save the daily
--- totals in a temporary table (#daily) first, then join it to a calendar of every day.
+-- To compare sites, change @site. (Bond Park had no long outages, so its zero-use days
+-- are not outages. The deck had outages in 2021 - read its 2021 zero-use days with care.)
+
 DECLARE @site nvarchar(50) = N'Downtown Parking Deck';   -- or N'Bond Park Boathouse'
 
-DROP TABLE IF EXISTS #daily;
-DROP TABLE IF EXISTS #cal;
+DROP TABLE IF EXISTS #site_days;
+DROP TABLE IF EXISTS #calendar;
 
-SELECT CAST(start_local AS date) AS d, COUNT(*) AS n,
-       SUM(energy_kwh) AS kwh, SUM(charge_minutes) AS mins
-INTO #daily
+-- STEP 1: One row per day the site was used, with that day's totals.
+-- Saved in a temporary table (#) so the slow view is read only once.
+SELECT CAST(start_local AS date) AS charge_date,
+       COUNT(*)                  AS sessions,
+       SUM(energy_kwh)           AS total_kwh,
+       SUM(charge_minutes)       AS total_minutes
+INTO #site_days
 FROM dbo.v_sessions_enriched
-WHERE site_name = @site AND start_local >= '2019-01-01' AND start_local < '2022-01-01'
+WHERE site_name = @site
+  AND start_local >= '2019-01-01'
+  AND start_local <  '2022-01-01'
 GROUP BY CAST(start_local AS date);
 
--- Calendar: one row for every day 2019-2021, so days with zero sessions appear too.
-SELECT TOP (1096) DATEADD(day, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) - 1, CAST('2019-01-01' AS date)) AS d
-INTO #cal
-FROM sys.all_objects a CROSS JOIN sys.all_objects b;
+-- STEP 2: A calendar with every day from 2019 to 2021 (1,096 days).
+-- Needed because days with zero sessions are not in the data at all.
+SELECT DATEADD(day, value, CAST('2019-01-01' AS date)) AS calendar_date
+INTO #calendar
+FROM GENERATE_SERIES(0, 1095);
 
-SELECT YEAR(c.d)  AS yr,
-       MONTH(c.d) AS mon,
-       ISNULL(SUM(x.n), 0)                                   AS sessions,
-       SUM(CASE WHEN x.n IS NULL THEN 1 ELSE 0 END)          AS zero_use_days,
-       CAST(SUM(x.kwh) / NULLIF(SUM(x.n), 0) AS decimal(4,1)) AS kwh_per_session,
-       CAST(SUM(x.mins) / NULLIF(SUM(x.n), 0) AS int)        AS minutes_per_session
-FROM #cal c
-LEFT JOIN #daily x ON x.d = c.d
-GROUP BY YEAR(c.d), MONTH(c.d)
+-- STEP 3: Join every calendar day to the site's days, then sum by month.
+-- A LEFT JOIN keeps all calendar days; days with no sessions get NULL.
+SELECT YEAR(cal.calendar_date)  AS yr,
+       MONTH(cal.calendar_date) AS mon,
+       ISNULL(SUM(day.sessions), 0)                                  AS sessions,
+       SUM(CASE WHEN day.sessions IS NULL THEN 1 ELSE 0 END)         AS zero_use_days,
+       CAST(SUM(day.total_kwh)     / NULLIF(SUM(day.sessions), 0) AS decimal(4,1)) AS kwh_per_session,
+       CAST(SUM(day.total_minutes) / NULLIF(SUM(day.sessions), 0) AS int)          AS minutes_per_session
+FROM #calendar AS cal
+LEFT JOIN #site_days AS day
+       ON day.charge_date = cal.calendar_date
+GROUP BY YEAR(cal.calendar_date), MONTH(cal.calendar_date)
 ORDER BY mon, yr;   -- same month side by side: Apr 2019, Apr 2020, Apr 2021
