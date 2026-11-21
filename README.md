@@ -68,6 +68,10 @@ The day-of-week pattern at each site is stable across 2019–2022:
 | Town Hall | Even all week (about 2–3 per day) | Visitors and staff |
 | Operations Center | Weekday-heavy: only 5–12% of sessions on weekends | Workplace |
 
+Use per day grew at every site from 2019 to 2022, on weekends and on weekdays. The few dips have likely causes: 2020 dips match the COVID lockdown, and the deck's weekday dip in 2021 matches months-long outages on three of its busiest chargers (see finding 7).
+
+**The downtown deck jumped in 2022:** weekend use rose 45% (5.6 → 8.1 per day) and weekday use rose 69% (4.8 → 8.1). Two causes likely worked together: chargers that were down in 2021 came back (P2-1 and P2-2 in January 2022, P3 East in June 2022), and demand kept growing. The data cannot separate the two exactly.
+
 > **Assumption:** The data has no information about who the customers are. These segments are a general assumption made from *when* people charge and *where* each site is (for example, Bond Park is a town park with a lake and boat rentals). They are a starting point to test with customer data or surveys, not a proven result.
 
 **6. Floor level drives demand in the parking deck — and outages make it look bigger.**
