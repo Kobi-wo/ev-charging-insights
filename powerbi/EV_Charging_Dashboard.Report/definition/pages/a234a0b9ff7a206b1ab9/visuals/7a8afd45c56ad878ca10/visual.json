@@ -1,0 +1,130 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "7a8afd45c56ad878ca10",
+  "position": {
+    "x": 969,
+    "y": 483,
+    "z": 2002,
+    "height": 425,
+    "width": 923,
+    "tabOrder": 2002
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_sessions_enriched"
+                    }
+                  },
+                  "Property": "Sessions"
+                }
+              },
+              "queryRef": "v_sessions_enriched.Sessions",
+              "nativeQueryRef": "Sessions"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_sessions_enriched"
+                    }
+                  },
+                  "Property": "Total kWh"
+                }
+              },
+              "queryRef": "v_sessions_enriched.Total kWh",
+              "nativeQueryRef": "Total kWh"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_sessions_enriched"
+                    }
+                  },
+                  "Property": "Median Minutes"
+                }
+              },
+              "queryRef": "v_sessions_enriched.Median Minutes",
+              "nativeQueryRef": "Median Minutes"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_sessions_enriched"
+                  }
+                },
+                "Property": "Sessions"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "978a8a7e2b13189cb5d7",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_sessions_enriched"
+              }
+            },
+            "Property": "Sessions"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "5d4407917115a13de089",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_sessions_enriched"
+              }
+            },
+            "Property": "Total kWh"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "36a7dac2382b7ce6d18f",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_sessions_enriched"
+              }
+            },
+            "Property": "Median Minutes"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

@@ -1,0 +1,126 @@
+table v_sessions_enriched
+	lineageTag: 9d514076-c16c-4c4a-aa4d-420234d73e23
+
+	measure Sessions = COUNTROWS(v_sessions_enriched)
+		formatString: 0
+		lineageTag: d0c95383-c189-4a5f-807c-ef0fddcc6b14
+
+	measure 'Sessions per Charger' = DIVIDE([Sessions], DISTINCTCOUNT(v_sessions_enriched[charger_name]))
+		lineageTag: 5fed5ef8-2b2b-44f1-a2bf-0b0c84d2ee20
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total kWh' = SUM(v_sessions_enriched[energy_kwh])
+		lineageTag: 72efe070-29db-4839-814c-9b9260134cbf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Median Minutes' = ```
+			MEDIAN(v_sessions_enriched[charge_minutes])
+			
+			```
+		lineageTag: d88b1428-14c5-4365-990f-70316bf71cf6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column start_local
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fc4d7747-3fcf-4bb4-b47a-b29e1646b389
+		summarizeBy: none
+		sourceColumn: start_local
+
+		variation Variation
+			isDefault
+			relationship: 3aed91fd-e711-4753-8c98-7172ea9574b9
+			defaultHierarchy: LocalDateTable_12e5efa5-ad56-41dd-b803-26ac6086b6aa.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column charge_minutes
+		dataType: double
+		lineageTag: 8783ade4-741d-4abd-a033-48f8e195d027
+		summarizeBy: sum
+		sourceColumn: charge_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column energy_kwh
+		dataType: double
+		lineageTag: 0876c165-1c2e-49a7-9091-4caed6f642b7
+		summarizeBy: sum
+		sourceColumn: energy_kwh
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column station_name
+		dataType: string
+		lineageTag: f46c565e-fe60-4717-bd3e-a53e16ca242d
+		summarizeBy: none
+		sourceColumn: station_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column charger_name
+		dataType: string
+		lineageTag: c9c61359-321c-4519-851c-4fce1f6ceeed
+		summarizeBy: none
+		sourceColumn: charger_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column site_name
+		dataType: string
+		lineageTag: 6d1de1b4-e374-4b82-b038-e78c73ee1000
+		summarizeBy: none
+		sourceColumn: site_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column site_type
+		dataType: string
+		lineageTag: 7d9fc376-b010-4604-8df5-1413a7b3cb7a
+		summarizeBy: none
+		sourceColumn: site_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Start Hour' = HOUR(v_sessions_enriched[start_local])
+		formatString: 0
+		lineageTag: 53f69012-cc73-471c-a324-a41b5e4b7fc3
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year = YEAR(v_sessions_enriched[start_local])
+		formatString: 0
+		lineageTag: bbcb4d06-94db-47ce-baf7-408f6e5b854e
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Floor =
+			IF(v_sessions_enriched[site_name] = "Downtown Parking Deck",
+			           VALUE(MID(v_sessions_enriched[charger_name], 7, 1)))
+		lineageTag: 5acf71ea-e02e-4cd4-aae0-9981dfc0b23f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition v_sessions_enriched = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost\SQLEXPRESS", "EV_Project"),
+				    dbo_v_sessions_enriched = Source{[Schema="dbo",Item="v_sessions_enriched"]}[Data]
+				in
+				    dbo_v_sessions_enriched
+
+	annotation PBI_ResultType = Table
+

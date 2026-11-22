@@ -1,0 +1,90 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "3f30a10ce86062d028a0",
+  "position": {
+    "x": 36,
+    "y": 483,
+    "z": 1000,
+    "height": 425,
+    "width": 923,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_sessions_enriched"
+                    }
+                  },
+                  "Property": "Start Hour"
+                }
+              },
+              "queryRef": "v_sessions_enriched.Start Hour",
+              "nativeQueryRef": "Start Hour",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "v_sessions_enriched"
+                    }
+                  },
+                  "Property": "Sessions"
+                }
+              },
+              "queryRef": "v_sessions_enriched.Sessions",
+              "nativeQueryRef": "Sessions"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "v_sessions_enriched"
+                  }
+                },
+                "Property": "Sessions"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

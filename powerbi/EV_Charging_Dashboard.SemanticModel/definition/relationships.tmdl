@@ -1,0 +1,5 @@
+relationship 3aed91fd-e711-4753-8c98-7172ea9574b9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: v_sessions_enriched.start_local
+	toColumn: LocalDateTable_12e5efa5-ad56-41dd-b803-26ac6086b6aa.Date
+
