@@ -74,8 +74,8 @@ Use per day grew at every site from 2019 to 2022, on weekends and on weekdays. T
 
 > **Assumption:** The data has no information about who the customers are. These segments are a general assumption made from *when* people charge and *where* each site is (for example, Bond Park is a town park with a lake and boat rentals). They are a starting point to test with customer data or surveys, not a proven result.
 
-**6. Floor level drives demand in the parking deck — and outages make it look bigger.**
-In 2022, each charger on floors 2–3 had about 1.7–1.9 sessions per day, and floors 5–6 had less than 0.2. But the upper-floor chargers were also silent for long periods (see finding 7). Counting only the days a charger was likely working, floors 2–3 still get about **6 times** more use than floors 5–6 (about 1.8 vs 0.3 sessions per day). Customers on high floors also stay longer and take more energy (16–24 kWh vs about 9 kWh), which suggests long-stay parkers.
+**6. Lower floors get far more use in the parking deck.**
+In 2022, each charger on floors 2–3 had about 1.7–1.9 sessions per day. Floors 5–6 had less than 0.2, which is about 10 times less. Some upper-floor chargers had long periods with no sessions. If those periods were outages, the difference is about 6 times (right column). The data cannot separate outages from low demand, but the lower floors get much more use in both cases.
 
 | Deck floor | Sessions per day (all days) | Sessions per day (likely working days) |
 |---|---:|---:|
@@ -84,6 +84,8 @@ In 2022, each charger on floors 2–3 had about 1.7–1.9 sessions per day, and 
 | 4 | 0.35 | 0.46 |
 | 5 | 0.10 | 0.26 |
 | 6 | 0.09 | 0.37 |
+
+Sessions on floors 5–6 were longer (median about 3 hours, compared with 1–1.5 hours on floors 2–3). But there were too few sessions (about 60 per floor in 2022) to draw a conclusion.
 
 **7. Some chargers were likely out of service for months.**
 The data has no status records, so outages cannot be confirmed. But a busy charger that goes silent for months is most likely down. I flagged a gap as a *likely outage* when it was 30+ days **and** at least 10 times the charger's normal gap between uses.
