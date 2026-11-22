@@ -150,5 +150,6 @@ images/                        dashboard screenshots
 
 ## Data source
 
-Town of Cary, North Carolina — Open Data Portal, EV charging station sessions.
-<!-- TODO: add the exact dataset URL and license -->
+Town of Cary, North Carolina — [Electric Vehicle Charging Stations](https://data.townofcary.org/explore/dataset/electric-vehicle-charging-stations/) (also listed on [Data.gov](https://catalog.data.gov/dataset/electric-vehicle-charging-stations)). Session details from public, Town-owned charging stations, pulled January 3, 2023.
+
+License: [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) (public domain).
