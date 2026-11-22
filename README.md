@@ -106,6 +106,15 @@ Two details matter:
 
 The cause is an assumption: the timing matches the spring 2020 lockdown, but the data does not record why customers changed.
 
+**9. Bond Park is the station most often full.**
+In 2022, both plugs at Bond Park were in use 8.6% of the time (672 hours). This is the highest share of any station. Deck P2-2 (4.0%) and Town Hall (3.4%) come next. Upper-floor deck chargers were almost never full. When both plugs are in use, a new customer cannot charge.
+
+**10. Bond Park is seasonal. The deck is not.**
+In 2021–2022, Bond Park had about 3× more sessions in June and September than in December. The deck grew all year with no clear season. Part of that growth came from chargers that came back after outages.
+
+**11. Energy per visit rose once, then stayed flat.**
+At Bond Park, average energy per session rose from 5.9 kWh (2018) to 8.4 kWh (2019) and stayed at about 8–9 kWh after that. The average charge rate stayed at about 5–6 kW. This suggests the chargers, not the cars, set the speed. That is an assumption.
+
 ## Recommendations
 
 These follow from the findings. They are proposals to test, not proven results.
@@ -115,6 +124,7 @@ These follow from the findings. They are proposals to test, not proven results.
 3. **Manage long sessions.** A time limit or an idle fee after charging ends can free ports for more customers. (This data records charging time only, not total plug-in time — a next step is to get plug-in data to measure idle time directly.)
 4. **Plan each site around its likely segment.** Schedule Bond Park maintenance on weekdays, keep the Ops Center reliable on work days, and give the all-week downtown deck the most capacity.
 5. **Track charger uptime.** Measure the % of days each charger works, and alert when a normally busy charger has no sessions for 2+ weeks. Long outages lose customers, and the upper-floor chargers lose the most.
+6. **Add capacity at Bond Park.** It is full most often, and its busy season (June–September) is predictable. A third station, or a time limit during summer weekends, would serve more customers.
 
 ## Data cleaning
 
@@ -125,6 +135,20 @@ These follow from the findings. They are proposals to test, not proven results.
 | Timestamps in UTC | Converted to US Eastern time, with daylight saving time, for hour-of-day analysis. |
 | Station renames | The network renamed its stations around August 6, 2021. Old names stop and new names start within the same days at the same addresses. I grouped the 22 station names into 4 physical sites with a lookup table (`dim_site`). |
 | Partial years | 2012 starts in April and 2023 has only 3 days. Year trends exclude 2023. |
+
+## Assumptions and limits
+
+The data has sessions only: no customer IDs, no charger status, and no plug-in times. These points are inferences, not facts from the data:
+
+| Topic | What I assumed | Why |
+|---|---|---|
+| Station renames | 22 station names map to 4 sites and 11 chargers | Same address, and old names stop when new names start (`dim_charger` notes how sure each match is) |
+| Outages | A gap of 30+ days that is also 10× a charger's normal gap is a *likely* outage | No status records. Thresholds are judgment calls |
+| Plugs per station | 2 plugs per station | Up to 2 sessions overlapped on one station, never 3 |
+| Charger type | Level 2 chargers | Average charge rate is about 5 kW |
+| Customer segments | Leisure, workplace and mixed | Inferred from when and where people charge |
+| COVID | The spring 2020 drop came from the lockdown | The timing matches. The data does not record why |
+| Session length | Charging time, not parked time | Cars may stay plugged in after charging ends, so plug use is higher than shown |
 
 ## Repository structure
 
