@@ -5,6 +5,9 @@ An analysis of 10 years of public EV charging sessions. The goal: understand how
 **Tools:** Microsoft SQL Server (T-SQL), Power BI, Git/GitHub
 **Data:** 20,142 charging sessions, April 2012 – January 2023, Town of Cary Open Data (see [Data source](#data-source))
 
+![Power BI dashboard](images/dashboard.png)
+*Power BI dashboard: all years. A year filter updates the cards, the floor chart and the hourly chart. The trend line always shows every year.*
+
 ---
 
 ## Business questions
@@ -132,7 +135,9 @@ sql/
   03_analysis.sql         one query per business question
 data/
   ev_charging_sessions.csv
-images/                   dashboard screenshots
+powerbi/
+  EV_Charging_Dashboard.pbip   Power BI project (open in Power BI Desktop)
+images/                        dashboard screenshots
 ```
 
 ## How to run
@@ -141,7 +146,7 @@ images/                   dashboard screenshots
 2. Run `sql/01_load_and_clean.sql`. Change the file path in the `BULK INSERT` line first.
 3. Run `sql/02_sites.sql`.
 4. Run `sql/03_analysis.sql`.
-5. In Power BI Desktop, connect to `localhost\SQLEXPRESS`, database `EV_Project`, view `v_sessions_enriched`.
+5. Open `powerbi/EV_Charging_Dashboard.pbip` in Power BI Desktop and click **Refresh**. It connects to `localhost\SQLEXPRESS`, database `EV_Project`.
 
 ## Data source
 
