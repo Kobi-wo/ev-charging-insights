@@ -21,8 +21,8 @@
                   {
                     "value": "EV Charging Customer Insights",
                     "textStyle": {
-                      "fontSize": "20pt",
-                      "fontWeight": "bold"
+                      "fontWeight": "bold",
+                      "fontSize": "20pt"
                     }
                   },
                   {

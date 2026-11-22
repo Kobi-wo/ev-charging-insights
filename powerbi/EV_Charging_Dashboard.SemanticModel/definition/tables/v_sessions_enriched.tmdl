@@ -2,7 +2,7 @@ table v_sessions_enriched
 	lineageTag: 9d514076-c16c-4c4a-aa4d-420234d73e23
 
 	measure Sessions = COUNTROWS(v_sessions_enriched)
-		formatString: 0
+		formatString: #,0
 		lineageTag: d0c95383-c189-4a5f-807c-ef0fddcc6b14
 
 	measure 'Sessions per Charger' = DIVIDE([Sessions], DISTINCTCOUNT(v_sessions_enriched[charger_name]))
@@ -11,17 +11,24 @@ table v_sessions_enriched
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Total kWh' = SUM(v_sessions_enriched[energy_kwh])
+		formatString: #,0
 		lineageTag: 72efe070-29db-4839-814c-9b9260134cbf
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Median Minutes' = ```
 			MEDIAN(v_sessions_enriched[charge_minutes])
 			
 			```
+		formatString: #,0
 		lineageTag: d88b1428-14c5-4365-990f-70316bf71cf6
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+	measure 'Total Sessions' = FORMAT([Sessions], "#,0")
+		lineageTag: 8d37b3b3-d569-4463-80d1-cd22b0b04d38
+
+	measure 'Total Energy (kWh)' = FORMAT([Total kWh], "#,0")
+		lineageTag: cc36cbd6-3161-406d-8a63-611d7c632ba7
+
+	measure 'Median Minutes per Session' = FORMAT([Median Minutes], "0")
+		lineageTag: fb0de41c-dda7-44e6-972d-a85dcf707c97
 
 	column start_local
 		dataType: dateTime

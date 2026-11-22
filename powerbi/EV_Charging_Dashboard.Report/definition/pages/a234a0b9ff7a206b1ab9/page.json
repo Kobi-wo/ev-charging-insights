@@ -5,9 +5,79 @@
   "displayOption": "FitToPage",
   "height": 1080,
   "width": 1920,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c0132af13bf82dbc92e9",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "v_sessions_enriched"
+              }
+            },
+            "Property": "Year"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "v",
+              "Entity": "v_sessions_enriched",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 3,
+                  "Left": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "v"
+                        }
+                      },
+                      "Property": "Year"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "2023L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
+  },
   "pageBinding": {
     "name": "44cb758a6020835c2edc",
     "type": "Default",
     "parameters": []
-  }
+  },
+  "visualInteractions": [
+    {
+      "source": "790e78cd9219025e36eb",
+      "target": "ce70b402705c16c19cb0",
+      "type": "DataFilter"
+    },
+    {
+      "source": "790e78cd9219025e36eb",
+      "target": "7d4c196466d4a4090e3c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "790e78cd9219025e36eb",
+      "target": "7a8afd45c56ad878ca10",
+      "type": "DataFilter"
+    }
+  ]
 }
