@@ -227,6 +227,15 @@ WHERE g.gap_days >= 30
 ORDER BY g.charger_name, g.last_use_before_gap;
 
 -- Q10. Ops Center decline: who used it, and how did that change?
+-- Result: sessions fell from ~200/yr (2013-2018) to 38 in 2020, while the network grew.
+--   - Sessions per day used stayed ~1.1-1.2 every year: whole days went silent (Q9 gaps),
+--     drivers did not fade away gradually.
+--   - New sites did not pull customers away: use rose after Bond Park opened (2017)
+--     and after Town Hall opened (2020); the drop began before the deck opened (Oct 2019).
+--   - Ending: Ops Center last session 2021-12-28, Ops Center Other (1 session) 2021-12-30,
+--     Ops Center Fast from 2022-05-25. Looks like a replacement - not confirmed.
+-- Firm answer: the site lost available days, not demand. The cause needs maintenance records.
+-- (Remote work during COVID may explain part of 2020, since this is a workplace charger.)
 SELECT YEAR(start_local) AS yr, charger_name,
        COUNT(*)                                                     AS sessions,
        CAST(AVG(energy_kwh) AS decimal(4,1))                        AS avg_kwh,
