@@ -92,10 +92,10 @@ The data has no status records, so outages cannot be confirmed. But a busy charg
 
 - **Deck P5 and P6** were silent 62–77% of their time in service. When they did work, customers used them every 2–4 days.
 - **Deck P3 East** was silent for 388 days (May 2021 – June 2022), and **Deck P2-1** for 244 days.
-- **Ops Center** was a steady weekday charger (about 200 sessions a year, 2012–2018). From mid-2019 it had five gaps of 68–133 days, and it stopped in December 2021. Its decline came mostly from downtime, not from a lack of drivers. (Some 2020 gaps also match the COVID lockdown.)
+- **Ops Center** was a steady weekday charger (about 200 sessions a year, 2012–2018). From mid-2019 it had five gaps of 68–133 days, and it stopped in December 2021. Its decline came mostly from downtime, not from a lack of drivers. On days it was used, it still had about 1.2 sessions, the same as in its busy years. The old unit stopped in December 2021, and a fast charger started at the same address in May 2022. (Some 2020 gaps also match the COVID lockdown.)
 
 **8. COVID hit downtown hard, but not the park.**
-In spring 2020 the downtown deck dropped from 243 sessions in February to 47 in April (−81%). It recovered by August. Bond Park went the other way: April–May 2020 had *more* sessions than April–May 2019 (136 vs 104, 157 vs 143), likely because outdoor recreation continued.
+In spring 2020 the downtown deck dropped from 243 sessions in February to 47 in April (−81%). It came back slowly: 65% of normal by August and 78% by December. Bond Park went the other way: April–May 2020 had *more* sessions than April–May 2019 (136 vs 104, 157 vs 143), likely because outdoor recreation continued.
 
 Two details matter:
 - **Few days had zero use.** The deck had only 3 zero-use days in April 2020. The drop came from fewer sessions per day, not from empty days.

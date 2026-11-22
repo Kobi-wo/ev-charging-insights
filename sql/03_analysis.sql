@@ -127,14 +127,44 @@ GROUP BY CASE WHEN charge_minutes < 60  THEN '1. Under 1 hour'
               ELSE                           '4. 8+ hours' END
 ORDER BY segment;
 
--- Q7. Busiest days: how close do sites get to capacity? Top 10 days by sessions, per site.
-WITH d AS (
-    SELECT site_name, CAST(start_local AS date) AS day_, COUNT(*) AS sessions,
-           ROW_NUMBER() OVER (PARTITION BY site_name ORDER BY COUNT(*) DESC) AS rn
+-- Q7. Capacity: how often are both plugs of a station in use? (2022)
+-- Check: no station ever had 3+ sessions at once, so each station
+-- most likely has 2 plugs (an inference from the data, not a spec sheet).
+-- Method: each session adds +1 when it starts and -1 when it ends. A running total
+-- gives the number of cars charging at each moment. The time until the next event
+-- tells how long that number lasted.
+-- Window = each station's first to last session in 2022, so months when a station
+-- was not in the data (P3 East before June, P2-1 after Aug) do not count.
+-- Note: this is CHARGING time. A car can stay plugged in after charging ends,
+-- so real plug use is higher.
+WITH s AS (
+    SELECT charger_name, start_local AS t_start,
+           DATEADD(second, CAST(charge_minutes * 60 AS int), start_local) AS t_end
     FROM dbo.v_sessions_enriched
-    GROUP BY site_name, CAST(start_local AS date)
+    WHERE YEAR(start_local) = 2022
+),
+events AS (
+    SELECT charger_name, t_start AS t,  1 AS change FROM s
+    UNION ALL
+    SELECT charger_name, t_end,        -1          FROM s
+),
+running AS (
+    SELECT charger_name, t,
+           SUM(change) OVER (PARTITION BY charger_name ORDER BY t, change ROWS UNBOUNDED PRECEDING) AS cars_charging,
+           LEAD(t)     OVER (PARTITION BY charger_name ORDER BY t, change) AS next_t
+    FROM events
 )
-SELECT site_name, day_, sessions FROM d WHERE rn <= 3 ORDER BY site_name, sessions DESC;
+SELECT charger_name,
+       MAX(cars_charging) AS max_at_once,
+       CAST(DATEDIFF(hour, MIN(t), MAX(t)) / 24.0 AS int) AS window_days,
+       CAST(100.0 * SUM(CASE WHEN cars_charging >= 1 THEN DATEDIFF(second, t, next_t) ELSE 0 END)
+            / DATEDIFF(second, MIN(t), MAX(t)) AS decimal(4,1)) AS pct_time_in_use,
+       CAST(100.0 * SUM(CASE WHEN cars_charging >= 2 THEN DATEDIFF(second, t, next_t) ELSE 0 END)
+            / DATEDIFF(second, MIN(t), MAX(t)) AS decimal(4,1)) AS pct_time_full,
+       CAST(SUM(CASE WHEN cars_charging >= 2 THEN DATEDIFF(second, t, next_t) ELSE 0 END) / 3600.0 AS int) AS hours_full
+FROM running
+GROUP BY charger_name
+ORDER BY pct_time_full DESC;
 
 -- Q8. What makes a charger popular? Floor level in the downtown deck (2022 = all floors open).
 -- Charger names look like 'Deck P3 West', so character 7 is the floor number.
@@ -246,45 +276,29 @@ WHERE site_name = 'Operations Center'
 GROUP BY YEAR(start_local), charger_name
 ORDER BY yr, charger_name;
 
--- Q11. COVID 2020: what changed - sessions, days with zero use, and customer value?
--- Customer value = energy (kWh) and time per session, not only the count of sessions.
--- To compare sites, change @site. (Bond Park had no long outages, so its zero-use days
--- are not outages. The deck had outages in 2021 - read its 2021 zero-use days with care.)
-
-DECLARE @site nvarchar(50) = N'Downtown Parking Deck';   -- or N'Bond Park Boathouse'
-
-DROP TABLE IF EXISTS #site_days;
-DROP TABLE IF EXISTS #calendar;
-
--- STEP 1: One row per day the site was used, with that day's totals.
--- Saved in a temporary table (#) so the slow view is read only once.
-SELECT CAST(start_local AS date) AS charge_date,
-       COUNT(*)                  AS sessions,
-       SUM(energy_kwh)           AS total_kwh,
-       SUM(charge_minutes)       AS total_minutes
-INTO #site_days
-FROM dbo.v_sessions_enriched
-WHERE site_name = @site
-  AND start_local >= '2019-01-01'
-  AND start_local <  '2022-01-01'
-GROUP BY CAST(start_local AS date);
-
--- STEP 2: A calendar with every day from 2019 to 2021 (1,096 days).
--- Needed because days with zero sessions are not in the data at all.
-SELECT DATEADD(day, value, CAST('2019-01-01' AS date)) AS calendar_date
-INTO #calendar
-FROM GENERATE_SERIES(0, 1095);
-
--- STEP 3: Join every calendar day to the site's days, then sum by month.
--- A LEFT JOIN keeps all calendar days; days with no sessions get NULL.
-SELECT YEAR(cal.calendar_date)  AS yr,
-       MONTH(cal.calendar_date) AS mon,
-       ISNULL(SUM(day.sessions), 0)                                  AS sessions,
-       SUM(CASE WHEN day.sessions IS NULL THEN 1 ELSE 0 END)         AS zero_use_days,
-       CAST(SUM(day.total_kwh)     / NULLIF(SUM(day.sessions), 0) AS decimal(4,1)) AS kwh_per_session,
-       CAST(SUM(day.total_minutes) / NULLIF(SUM(day.sessions), 0) AS int)          AS minutes_per_session
-FROM #calendar AS cal
-LEFT JOIN #site_days AS day
-       ON day.charge_date = cal.calendar_date
-GROUP BY YEAR(cal.calendar_date), MONTH(cal.calendar_date)
-ORDER BY mon, yr;   -- same month side by side: Apr 2019, Apr 2020, Apr 2021
+-- Q11. COVID 2020: how far did each site drop, and how fast did it come back?
+-- Index: each month's sessions compared to that site's Jan-Feb 2020 average (= 100).
+-- 100 = normal, 50 = half of normal, 120 = 20% above normal.
+-- The cause is an assumption: the timing matches the spring 2020 lockdown,
+-- but the data does not record why customers changed.
+WITH monthly AS (
+    SELECT site_name, MONTH(start_local) AS mon, COUNT(*) AS sessions
+    FROM dbo.v_sessions_enriched
+    WHERE YEAR(start_local) = 2020
+      AND site_name IN (N'Downtown Parking Deck', N'Bond Park Boathouse')
+    GROUP BY site_name, MONTH(start_local)
+),
+baseline AS (
+    SELECT site_name, AVG(1.0 * sessions) AS base
+    FROM monthly WHERE mon IN (1, 2)
+    GROUP BY site_name
+)
+SELECT m.mon,
+       MAX(CASE WHEN m.site_name = N'Downtown Parking Deck' THEN m.sessions END) AS deck_sessions,
+       MAX(CASE WHEN m.site_name = N'Downtown Parking Deck' THEN CAST(100 * m.sessions / b.base AS int) END) AS deck_index,
+       MAX(CASE WHEN m.site_name = N'Bond Park Boathouse'   THEN m.sessions END) AS park_sessions,
+       MAX(CASE WHEN m.site_name = N'Bond Park Boathouse'   THEN CAST(100 * m.sessions / b.base AS int) END) AS park_index
+FROM monthly m
+JOIN baseline b ON b.site_name = m.site_name
+GROUP BY m.mon
+ORDER BY m.mon;
