@@ -302,3 +302,28 @@ FROM monthly m
 JOIN baseline b ON b.site_name = m.site_name
 GROUP BY m.mon
 ORDER BY m.mon;
+
+-- Q12. Seasons: sessions by month, per site (2021-2022 combined).
+-- Result: Bond Park has a clear season (June and September about 3x December).
+-- The deck rises all year - that is growth and chargers returning, not a season.
+SELECT MONTH(start_local) AS mon,
+       SUM(CASE WHEN site_name = N'Bond Park Boathouse'   THEN 1 ELSE 0 END) AS bond_park,
+       SUM(CASE WHEN site_name = N'Downtown Parking Deck' THEN 1 ELSE 0 END) AS deck,
+       SUM(CASE WHEN site_name = N'Town Hall'             THEN 1 ELSE 0 END) AS town_hall
+FROM dbo.v_sessions_enriched
+WHERE YEAR(start_local) IN (2021, 2022)
+GROUP BY MONTH(start_local)
+ORDER BY mon;
+
+-- Q13. Energy per visit over time, per site (one site at a time removes the site-mix effect).
+-- Result: Bond Park rose from 5.9 kWh (2018) to 8.4 kWh (2019), then stayed flat at 8-9.
+-- The deck stayed at about 10 kWh. Charge rate (kW) stayed at about 5-6 at both sites.
+SELECT site_name, YEAR(start_local) AS yr, COUNT(*) AS sessions,
+       CAST(AVG(energy_kwh) AS decimal(4,1))                         AS avg_kwh,
+       CAST(60 * SUM(energy_kwh) / SUM(charge_minutes) AS decimal(3,1)) AS avg_kw,
+       CAST(AVG(charge_minutes) AS int)                              AS avg_minutes
+FROM dbo.v_sessions_enriched
+WHERE site_name IN (N'Bond Park Boathouse', N'Downtown Parking Deck')
+  AND YEAR(start_local) BETWEEN 2018 AND 2022
+GROUP BY site_name, YEAR(start_local)
+ORDER BY site_name, yr;
