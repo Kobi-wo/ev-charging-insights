@@ -4,10 +4,10 @@
   "position": {
     "x": 966,
     "y": 288,
-    "z": 2001,
+    "z": 3000,
     "height": 380,
     "width": 930,
-    "tabOrder": 2001
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -70,7 +70,6 @@
         "isDefaultSort": true
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -92,7 +91,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [
@@ -147,20 +147,6 @@
             }
           ]
         }
-      },
-      {
-        "name": "a3c142f6e50e56d361de",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_sessions_enriched"
-              }
-            },
-            "Property": "Sessions per Charger"
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

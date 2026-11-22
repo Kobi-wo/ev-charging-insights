@@ -4,10 +4,10 @@
   "position": {
     "x": 24,
     "y": 156,
-    "z": 2002,
+    "z": 4000,
     "height": 120,
     "width": 1872,
-    "tabOrder": 2002
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -80,51 +80,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "978a8a7e2b13189cb5d7",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_sessions_enriched"
-              }
-            },
-            "Property": "Sessions"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "5d4407917115a13de089",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_sessions_enriched"
-              }
-            },
-            "Property": "Total kWh"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "36a7dac2382b7ce6d18f",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_sessions_enriched"
-              }
-            },
-            "Property": "Median Minutes"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

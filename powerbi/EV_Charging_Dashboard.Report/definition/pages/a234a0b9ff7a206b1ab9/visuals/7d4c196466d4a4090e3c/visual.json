@@ -103,7 +103,6 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -125,7 +124,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [
@@ -257,48 +257,6 @@
         "type": "Categorical",
         "howCreated": "User",
         "isHiddenInViewMode": true
-      },
-      {
-        "name": "ee05f3e1a31d4f919d1e",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_sessions_enriched"
-              }
-            },
-            "Property": "Sessions"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "dde6060325bc3d707501",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_sessions_enriched"
-              }
-            },
-            "Property": "Year"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "237cfdc4c2bbd62ebb9d",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "v_sessions_enriched"
-              }
-            },
-            "Property": "site_name"
-          }
-        },
-        "type": "Categorical"
       }
     ]
   }

@@ -4,10 +4,10 @@
   "position": {
     "x": 24,
     "y": 12,
-    "z": 3000,
+    "z": 5000,
     "height": 56,
     "width": 1872,
-    "tabOrder": 3000
+    "tabOrder": 5000
   },
   "visual": {
     "visualType": "textbox",
@@ -26,7 +26,7 @@
                     }
                   },
                   {
-                    "value": "   Town of Cary, NC public charging network, 2012\u20132022",
+                    "value": "   Town of Cary, NC public charging network, 2012–2022",
                     "textStyle": {
                       "fontSize": "12pt"
                     }
